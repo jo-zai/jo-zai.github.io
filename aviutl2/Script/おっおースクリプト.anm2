@@ -1,0 +1,18 @@
+--track@hane:ハネ量, 0, 4000, 40
+--track@zoomscale:大きさ加算, 0.0, 1.0, 0.1, 0.1, 0.0
+--check@is_scroll:スクロールする（アロナ式等）, 0
+--check@gyaku:ハネ方向逆, 0
+
+function oohane(a, b, c, d)
+  local varsan = ((obj.time/(1/182*60)%1)-0.5)*10
+  if c == 1 then
+    obj.ox = obj.ox-obj.screen_w* ((obj.time / (1/182*420))%1)
+  end
+  obj.oy = obj.oy + a * (1-( ((obj.time/(1/182*60)%1)-1 )^2))*(d*2-1)
+  obj.zoom = obj.zoom+(b*(
+    (-0.2*(varsan^2)+5)/5
+    )
+  )
+end
+
+oohane(hane, zoomscale, is_scroll, gyaku)
