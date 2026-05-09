@@ -1,0 +1,35 @@
+--label:金マジスクリプト
+--track@tempo:テンポ, 1, 1000, 182
+--track@hane:ハネ量, -4000, 4000, 60
+--track@zoomscale:大きさ加算, 0, 1000, 20
+--track@hakusuu:スクロール拍数, 1, 16, 7, 1
+--select@scrollvec:スクロール方向, なし=0, 通常=1, 逆方向=2
+--information:金マジスクリプト by 錠罪
+
+local varsan = ((obj.time/(1/tempo*60)%1)-0.5)*10
+local scaller = zoomscale / 100
+function scVec ()
+  if (scrollvec == 0) then
+    return 0
+  else
+    return ((scrollvec - 1.5) * 2)
+  end
+end
+
+obj.ox = obj.ox+(scVec()*obj.screen_w*((obj.time / (1/tempo*(60*hakusuu)))%1))
+
+obj.oy = obj.oy + hane * (
+  1 + 0 - (
+    (
+      ( 1-
+        (obj.time/(1/tempo*60)) %1
+      )
+    )^3 
+  )
+)
+
+obj.zoom = obj.zoom+(scaller*(
+  (
+    -0.2*(varsan^2)+5)/5
+  )
+)

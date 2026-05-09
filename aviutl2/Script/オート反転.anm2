@@ -1,0 +1,43 @@
+--label:金マジスクリプト
+--track@tempo:テンポ, 1, 1000, 182
+--track@asp:縦横比, -100, 100, -10
+--track@sizumi:移動y, -1000, 1000, 0
+--check@aburi:炙りビン, 0
+--check@inverts:反転から始まる, false
+--information:金マジスクリプト by 錠罪
+
+function kisuuDesu(suuji)
+  return (( suuji % 2 ) == 1)
+end
+
+obj.oy = obj.oy + (
+  sizumi * (
+    1 + 0 - (
+      (
+        ( 1-
+          (obj.time/(1/tempo*60)) %1
+        )
+      )^3 
+    )
+  )
+)
+
+obj.aspect =(
+  (asp/100) * (
+     (
+      (
+        ( 1-
+          (obj.time/(1/tempo*60)) %1
+        )
+      )^3 
+    )
+  )
+)
+
+if (
+  kisuuDesu(
+    math.floor(  ( obj.time/(1/tempo*60) )  )
+  ) ~= inverts
+) then
+  obj.ry = 180 - (aburi * 180)
+end
