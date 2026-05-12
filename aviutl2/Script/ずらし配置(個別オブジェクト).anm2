@@ -1,0 +1,26 @@
+--label:配置
+--track@counts:個数, 1, 1000, 1, 1
+--track@x:X, -100000.00, 100000.00, 0, 0.01
+--track@y:Y, -100000.00, 100000.00, 0, 0.01
+--track@z:Z, -100000.00, 100000.00, 0, 0.01
+--check@gyaku:逆から配置する, false
+--information:Created by 錠罪
+
+ox = obj.ox
+count = math.floor(counts)
+
+obj.copybuffer("tempbuffer", "object")
+obj.multiobject(count, function()
+  obj.load("tempbuffer")
+  if gyaku then
+    obj.ox = obj.ox + ((count - obj.index -1)* x)
+    obj.oy = obj.oy + ((count - obj.index -1)* y)
+    obj.oz = obj.oz + ((count - obj.index -1)* z)
+  else
+    obj.ox = obj.ox + ((obj.index)* x)
+    obj.oy = obj.oy + ((obj.index)* y)
+    obj.oz = obj.oz + ((obj.index)* z)
+  end
+
+end)
+obj.ox = ox

@@ -1,0 +1,35 @@
+--label:配置
+--track@start_r:開始半径, 0, 4000, 100, 0.01
+--track@plus_r:加算半径, -1000, 1000, 20, 0.01
+--track@start_a:開始角度, -360, 360, 0, 0.01
+--track@plus_a:間隔角度, -360, 360, 22.5, 0.01
+--track@counts:個数, 1, 1000, 32, 1
+--check@kobetsu:向きを個別化, false
+
+function KakudoFix (kakudo)
+  if(math.abs(kakudo) < 0) then
+    return 360-(kakudo - math.floor(kakudo / 360) * 360)
+  else
+    return kakudo
+  end
+end
+
+local ox = obj.ox
+local oy = obj.oy
+local rz = obj.rz
+
+obj.copybuffer("tempbuffer", "object")
+obj.multiobject(math.ceil(counts), function()
+  obj.load("tempbuffer")
+  hankei = start_r + (plus_r * obj.index)
+  kaku = KakudoFix(start_a + (plus_a * obj.index))
+  obj.ox = ox + (hankei * math.sin(math.rad(kaku)))
+  obj.oy = oy + (hankei * math.cos(math.rad(kaku)))
+  if (kobetsu) then
+    obj.rz = rz - kaku
+  end
+end)
+
+obj.ox = ox
+obj.oy = oy
+obj.rz = rz

@@ -1,0 +1,74 @@
+--label:個別オブジェクト制御
+--track@xpos:X,-100000.00, 100000.00, 0, 0.01
+--track@ypos:Y,-100000.00, 100000.00, 0, 0.01
+--track@zpos:Z,-100000.00, 100000.00, 0, 0.01
+--trackgroup@xpos,ypos,zpos,:座標
+
+--track@xanc:中心X,-100000.00, 100000.00, 0, 0.01
+--track@yanc:中心Y,-100000.00, 100000.00, 0, 0.01
+--track@zanc:中心Z,-100000.00, 100000.00, 0, 0.01
+--trackgroup@xanc,yanc,zanc,:中心座標
+
+--track@rotax:X軸回転,-36000.00, 36000.00, 0, 0.001
+--track@rotay:Y軸回転,-36000.00, 36000.00, 0, 0.00
+--track@rotaz:Z軸回転,-36000.00, 36000.00, 0, 0.001
+--trackgroup@rotax,rotay,rotaz,:回転
+
+--track@zooom:拡大率, -100.000, 10000.000, 0, 0.001
+--track@aspected:縦横比, -100.000, 100.000, 0, 0.001
+--track@alpha:透明度, 0, 100.00, 0, 0.01
+
+--separator:領域拡張
+--check@kakucho:領域拡張を有効化, false
+--track@exue:上,0, 10000, 0, 1
+--track@exshita:下,0, 10000, 0, 1
+--track@exhidari:左,0, 10000, 0, 1
+--track@exmigi:右,0, 10000, 0, 1
+
+--separator:適用設定
+--track@setcount:1セットの個数, 1, 4000, 1, 1
+--check@firstset:1セット目は適用しない, 0
+--information:Created by 錠罪
+
+function getS ()
+  return (
+    math.ceil((obj.index + 1)/ setcount) - firstset
+  )
+end
+
+function valuelimit(valueX, kagen, jogen)
+  if(valueX < kagen) then
+    return kagen
+  elseif(valueX > jogen) then
+    return jogen
+  else
+    return valueX
+  end
+end
+
+if (obj.getoption("multi_object")) then
+  obj.ox = obj.ox + (xpos * getS())
+  obj.oy = obj.oy + (ypos * getS())
+  obj.oz = obj.oz + (zpos * getS())
+
+  obj.cx = obj.cx + (xanc * getS())
+  obj.cy = obj.cy + (yanc * getS())
+  obj.cz = obj.cz + (zanc * getS())
+
+  obj.rx = obj.rx + (rotax * getS())
+  obj.ry = obj.ry + (rotay * getS())
+  obj.rz = obj.rz + (rotaz * getS())
+
+  obj.zoom = valuelimit(obj.zoom + (zooom/100 * getS()), 0, 10000)
+  obj.aspect = valuelimit(obj.aspect + (aspected/100 * getS()), -1, 1)
+  obj.alpha = 1 - valuelimit((alpha/100 * getS()), 0, 1)
+
+  if (kakucho) then
+    obj.effect("領域拡張",
+      "上", (exue * getS()),
+      "下", (exshita * getS()),
+      "左", (exhidari * getS()),
+      "右", (exmigi * getS())
+    )
+  end
+end

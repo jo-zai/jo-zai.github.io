@@ -1,0 +1,21 @@
+--label:配置
+--track@mado:一辺の数, 1, 64, 4, 1
+--track@douga:動画No, 0, 4095, 0, 1
+--check@ind:動画Noをobj.indexで置き換える, false
+
+--information:Created by 錠罪
+
+
+local width = obj.screen_w
+local height = obj.screen_h
+
+mado = math.ceil(mado)
+if ind and (obj.index ~= nil) then
+  douga = obj.index
+else
+  douga = math.ceil(douga)
+end
+
+obj.effect("リサイズ", "X", width/mado, "Y", height/mado, "ピクセル数でサイズ指定", 1)
+obj.ox = -(width/2)+((width/mado)/2)+(width/mado)*(douga % mado)
+obj.oy = -(height/2)+((height/mado)/2)+(height/mado)*(math.floor(douga / mado))

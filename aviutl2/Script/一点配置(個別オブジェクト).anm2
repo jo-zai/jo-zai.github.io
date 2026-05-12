@@ -1,0 +1,8 @@
+--label:配置
+--track@count:個数, 1, 1000, 1, 1
+--information:Created by 錠罪
+
+obj.copybuffer("tempbuffer", "object")
+obj.multiobject(math.floor(count), function()
+  obj.load("tempbuffer")
+end)

@@ -1,0 +1,22 @@
+--label:基本効果
+--track@xpos:X, -4000, 4000, 0, 0.01
+--track@ypos:Y, -4000, 4000, 0, 0.01
+--information:Created by 錠罪
+
+local xx = obj.x - xpos
+local yy = obj.y - ypos
+
+
+if (xx == 0 and yy ==0) then
+  obj.rz = 0
+elseif (xx >= 0 and yy < 0) then
+  obj.rz = -90+math.deg(math.atan(yy/xx))
+elseif (xx < 0 and yy < 0) then
+  obj.rz = 90+math.deg(math.atan(yy/xx))
+elseif (xx < 0 and yy >= 0) then
+  obj.rz = 90+math.deg(math.atan(yy/xx))
+elseif (xx >= 0 and yy >= 0) then
+  obj.rz = -90+math.deg(math.atan(yy/xx))
+else
+  obj.rz=0
+end

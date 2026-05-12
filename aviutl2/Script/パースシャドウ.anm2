@@ -1,0 +1,84 @@
+--label:装飾
+--track@kieX:消失点X, -4000, 4000, 0, 0.01
+--track@kieY:消失点Y, -4000, 4000, 0, 0.01
+--track@mitsudo:描画密度, 0.01, 20, 1, 0.01
+--track@wariai:描画割合, 0, 1, 1, 0.01
+--track@shalpha:シャドウ不透明度, 0, 1, 0.4, 0.01
+
+--group:単色化
+--check@tanshoku:シャドウの単色化を有効化, true
+--track@power:強さ, 0, 100, 100, 0.01
+--color@col:色, 0x3F3F3F
+--check@hoji:輝度を保持する, 0
+
+--group:ぼかし
+--check@bokashi:シャドウのぼかしを有効化, false
+--track@range:範囲, 0, 1000, 10, 1
+--track@aspect:縦横比, -100, 100, 0, 0.001
+--track@bokapower:光の強さ, 0, 60, 0, 0.1
+--check@sizekotei:サイズ固定（機能しません）, 0
+
+--information:Created by 錠罪
+
+local ox = obj.ox
+local oy = obj.oy
+local oz = obj.oz
+
+function getKyori(x1, y1, x2, y2)
+  xx = x2 - x1
+  yy = y2 - y1
+  if xx == 0 then
+    return yy
+  elseif yy == 0 then
+    return xx
+  else
+    return (xx / math.sin(math.atan(xx / yy)) )
+  end
+end
+
+obj.copybuffer("cache:original", "object")
+
+kyori = math.abs(getKyori(ox, oy, kieX, kieY))
+print(kyori)
+
+obj.setoption(
+  "drawtarget",
+  "tempbuffer",
+  (obj.w + math.abs(kieX*2)),
+  (obj.h + math.abs(kieY*2))
+)
+
+for i = 1, math.ceil(kyori *  wariai * mitsudo) do
+  obj.draw(
+    ox + ((kieX - ox) * ( i / math.ceil(kyori * mitsudo) )),
+    oy + ((kieY - oy) * ( i / math.ceil(kyori * mitsudo) )),
+    oz,
+    (1 - ( i / math.ceil(kyori * mitsudo) ))
+  )
+end
+
+obj.multiobject(2,function()
+  if obj.index == 0 then
+    obj.load("tempbuffer")
+
+    if tanshoku then
+      obj.effect("単色化",
+        "強さ", power,
+        "色", col,
+        "輝度を保持する", hoji
+      )
+    end
+    if bokashi then
+      obj.effect("ぼかし",
+        "範囲", range,
+        "縦横比", aspect,
+        "光の強さ", bokapower,
+        "サイズ固定", sizekotei
+      )
+    end
+    obj.alpha = shalpha
+  else
+    obj.copybuffer("tempbuffer", "cache:original")
+    obj.load("tempbuffer")
+  end
+end)

@@ -1,0 +1,70 @@
+--label:個別オブジェクト制御
+
+--separator:単色化
+--check@tanshoku:単色化を有効にする, false
+--track@power:強さ(開始), 0, 100, 0, 0.1
+--track@kinniku:強さ(加算), -100, 100, 10, 0.1
+--color@iroha:色, 0x4C97FF
+--check@hoji:輝度を保持する, 1
+
+
+--separator:色調補正
+--check@shikichou:色調補正を有効にする, false
+--track@blight:明るさ,-100, 100, 0, 0.01
+--track@shinosawa:コントラスト, -100, 100, 0, 0.01
+--track@iroai:色相, -3600, 3600, 0, 0.01
+--track@kirakira:輝度, -100, 100, 0, 0.01
+--track@saido:彩度, -100, 100, 0, 0.01
+--check@houwa:飽和する, 0
+
+--separator:適用設定
+--track@setcount:1セットの個数, 1, 4000, 1, 1
+--check@firstset:1セット目は適用しない, 0
+--information:Created by 錠罪
+
+function getS ()
+  return (
+    math.ceil((obj.index + 1)/ setcount) - firstset
+  )
+end
+
+function valuelimit(valueX, kagen, jogen)
+  if(valueX < kagen) then
+    return kagen
+  elseif(valueX > jogen) then
+    return jogen
+  else
+    return valueX
+  end
+end
+
+if obj.getoption("multi_object") then
+
+  if tanshoku then
+    local tuyosa = valuelimit( (power + (kinniku * getS() ) ), 0, 100)
+    obj.effect("単色化",
+      "強さ", tuyosa,
+      "色", iroha,
+      "輝度を保持する", hoji
+    )
+  end
+
+  if shikichou then
+    obj.effect("色調補正",
+      "明るさ",
+      valuelimit(100 +(blight * getS()), 0, 200),
+      "コントラスト",
+      valuelimit(100 +(shinosawa * getS()), 0, 200),
+      "色相",
+      (iroai * getS()),
+      "輝度",
+      valuelimit(100 +(kirakira * getS()), 0, 200),
+      "彩度",
+      valuelimit(100 +(saido * getS()), 0, 200),
+      "飽和する", houwa
+    )
+  end
+end
+
+
+
